@@ -84,6 +84,9 @@ public:
     bool remomveComponent(const char* name);
 
     Component* getComponent(const char* name);
+    Component* getComponent(int value);
+
+    int getComponentCount() { return m_componentCount; }
 protected:
     const char* m_name;
 
