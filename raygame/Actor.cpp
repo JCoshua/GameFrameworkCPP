@@ -2,6 +2,7 @@
 #include "Transform2D.h"
 #include <string.h>
 #include "Collider.h"
+#include "Component.h"
 
 Actor::Actor()
 {
@@ -27,10 +28,6 @@ void Actor::start()
     m_started = true;
 }
 
-void Actor::onCollision(Actor* other)
-{
-}
-
 void Actor::update(float deltaTime)
 {
 }
@@ -42,6 +39,111 @@ void Actor::draw()
 void Actor::end()
 {
     m_started = false;
+}
+
+void Actor::onCollision(Actor* other)
+{
+}
+
+Component* Actor::addComponent(Component* component)
+{
+    //Create a new array with a size one greater than our old array
+    Component** appendedArray = new Component * [m_componentCount + 1];
+    //Copy the values from the old array to the new array
+    for (int i = 0; i < m_componentCount; i++)
+    {
+        appendedArray[i] = m_component[i];
+    }
+
+    //Set the last value in the new array to be the actor we want to add
+    appendedArray[m_componentCount] = component;
+    //Set old array to hold the values of the new array
+    m_component = appendedArray;
+    m_componentCount++;
+
+    return component;
+}
+
+bool Actor::remomveComponent(Component* component)
+{
+    //Check to see if the index is outside the bounds of our array
+    if (!component)
+    {
+        return false;
+    }
+
+    bool actorRemoved = false;
+
+    //Create a new array with a size one less than our old array 
+    Component** newArray = new Component * [m_componentCount - 1];
+    //Create variable to access tempArray index
+    int j = 0;
+    //Copy values from the old array to the new array
+    for (int i = 0; i < m_componentCount; i++)
+    {
+        //If the current index is not the index that needs to be removed,
+        //add the value into the old array and increment j
+        if (m_component[i] == component)
+        {
+            newArray[j] = m_component[i];
+            j++;
+        }
+        else
+        {
+            delete m_component[i];
+            actorRemoved = true;
+        }
+    }
+
+    //Set the old array to be the tempArray
+    m_component = newArray;
+    m_componentCount--;
+    return actorRemoved;
+}
+
+bool Actor::remomveComponent(const char* name)
+{
+    //Check to see if the index is outside the bounds of our array
+    if (!name)
+    {
+        return false;
+    }
+
+    bool actorRemoved = false;
+
+    //Create a new array with a size one less than our old array 
+    Component** newArray = new Component * [m_componentCount - 1];
+    //Create variable to access tempArray index
+    int j = 0;
+    //Copy values from the old array to the new array
+    for (int i = 0; i < m_componentCount; i++)
+    {
+        //If the current index is not the index that needs to be removed,
+        //add the value into the old array and increment j
+        if (m_component[i]->getName() == name)
+        {
+            newArray[j] = m_component[i];
+            j++;
+        }
+        else
+        {
+            delete m_component[i];
+            actorRemoved = true;
+        }
+    }
+
+    //Set the old array to be the tempArray
+    m_component = newArray;
+    m_componentCount--;
+    return actorRemoved;
+}
+
+Component* Actor::getComponent(const char* name)
+{
+    for (int i = 0; i < m_componentCount; i++)
+        if (m_component[i]->getName() == name)
+            return m_component[i];
+    return nullptr;
 }
 
 void Actor::onDestroy()
