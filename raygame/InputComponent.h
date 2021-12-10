@@ -1,5 +1,7 @@
 #pragma once
 #include "Component.h"
+#include "Engine.h"
+#include "raylib.h"
 
 class InputComponent :
 	public Component
@@ -12,9 +14,14 @@ public:
 	void draw() override;
 	void end() override;
 
-	MathLibrary::Vector2 getMoveDirection() { return m_moveDirection; }
-	void setMoveDirection(MathLibrary::Vector2 value) { m_moveDirection = value; }
+	MathLibrary::Vector2 getMoveAxis();
 private:
-	MathLibrary::Vector2 m_moveDirection;
+	KeyboardKey m_keyA = KeyboardKey::KEY_A;
+	KeyboardKey m_keyD = KeyboardKey::KEY_D;
+	KeyboardKey m_keyW = KeyboardKey::KEY_W;
+	KeyboardKey m_keyS = KeyboardKey::KEY_S;
+	KeyboardKey m_input1 = KeyboardKey::KEY_SPACE;
+	KeyboardKey m_enter = KeyboardKey::KEY_ENTER;
+	KeyboardKey m_cancel = KeyboardKey::KEY_BACKSPACE;
 };
 

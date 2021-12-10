@@ -146,6 +146,14 @@ Component* Actor::getComponent(const char* name)
     return nullptr;
 }
 
+Component* Actor::getComponent(int value)
+{
+    if(value < 0 || value > m_componentCount)
+	return nullptr;
+
+    return m_component[value];
+}
+
 void Actor::onDestroy()
 {
     //Removes this actor from its parent if it has one

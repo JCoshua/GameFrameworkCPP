@@ -1,13 +1,30 @@
 #include "InputComponent.h"
-#include "Engine.h"
-#include "raylib.h"
-#include "Transform2D.h"
+
+InputComponent::~InputComponent()
+{
+}
+
+void InputComponent::start()
+{
+}
 
 void InputComponent::update(float deltaTime)
 {
-	int xDirection = -(int)(Engine::getKeyDown(KeyboardKey::KEY_W)) + (int)(Engine::getKeyDown(KeyboardKey::KEY_S));
-	int yDirection = -(int)(Engine::getKeyDown(KeyboardKey::KEY_A)) + (int)(Engine::getKeyDown(KeyboardKey::KEY_D));
+	
+}
 
-	m_moveDirection.x = xDirection;
-	m_moveDirection.y - yDirection;
+void InputComponent::draw()
+{
+}
+
+void InputComponent::end()
+{
+}
+
+MathLibrary::Vector2 InputComponent::getMoveAxis()
+{
+	int xDirection = -(Engine::getKeyDown(KeyboardKey::KEY_W)) + (Engine::getKeyDown(KeyboardKey::KEY_S));
+	int yDirection = -(Engine::getKeyDown(KeyboardKey::KEY_A)) + (Engine::getKeyDown(KeyboardKey::KEY_D));
+
+	return MathLibrary::Vector2(xDirection, yDirection);
 }

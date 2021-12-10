@@ -3,11 +3,23 @@
 #include "Transform2D.h"
 #include "InputComponent.h"
 
+void MovementComponent::start()
+{
+}
+
 void MovementComponent::update(float deltaTime)
 {
-	for (int i = 0; i < getOwner()->getComponentCount(); i++)
-		if (getOwner()->getComponent(i)->getName() == "InputComponent")
-			m_velocity = ((InputComponent*)getOwner()->getComponent(i))->getMoveDirection();
+	getOwner()->getTransform()->setLocalPosition(getOwner()->getTransform()->getLocalPosition() + (m_velocity.normalize() * m_speed * deltaTime));
+}
 
-	getOwner()->getTransform()->setLocalPosition(getOwner()->getTransform()->getLocalPosition() + (m_velocity * m_speed * deltaTime));
+void MovementComponent::draw()
+{
+}
+
+void MovementComponent::end()
+{
+}
+
+void MovementComponent::onCollision(Actor* other)
+{
 }
