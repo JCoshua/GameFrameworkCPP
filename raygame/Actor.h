@@ -40,6 +40,11 @@ public:
     const char* getName() { return m_name; }
 
     /// <summary>
+    /// Sets the name of this actor
+    /// </summary>
+    void setName(const char* name) { m_name = name; }
+
+    /// <summary>
     /// Called during the first update after an actor is added to a scene.
     /// </summary>
     virtual void start();
@@ -77,12 +82,32 @@ public:
     /// <param name="other">The actor this actor collided with.</param>
     virtual void onCollision(Actor* other);
 
-    
+    /// <summary>
+    /// Adds a component to the end of the component array
+    /// </summary>
+    /// <param name="component">The new component to attach to the actor</param>
+    /// <returns>A reference to the added component</returns>
     Component* addComponent(Component* component);
 
+    /// <summary>
+    /// Removes the first instance found that matched the component reference
+    /// </summary>
+    /// <param name="component">The component to remove</param>
+    /// <returns>Flase if the component is not in the array</returns>
     bool remomveComponent(Component* component);
+
+    /// <summary>
+    /// Removes the first instance found that matched the component name
+    /// </summary>
+    /// <param name="component">The name of the component to remove</param>
+    /// <returns>Flase if the component is not in the array</returns>
     bool remomveComponent(const char* name);
 
+    /// <summary>
+    /// Get the first component instance attached to this actor
+    /// that matches the name
+    /// </summary>
+    /// <param name="name">The name of the desired component</param>
     Component* getComponent(const char* name);
     Component* getComponent(int value);
 
@@ -95,6 +120,6 @@ private:
     Transform2D* m_transform;
     Collider* m_collider;
     Component** m_component;
-    int m_componentCount;
+    unsigned int m_componentCount;
 };
 

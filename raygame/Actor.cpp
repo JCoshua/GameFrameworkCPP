@@ -3,6 +3,7 @@
 #include <string.h>
 #include "Collider.h"
 #include "Component.h"
+#include <iostream>
 
 Actor::Actor()
 {
@@ -30,23 +31,40 @@ void Actor::start()
 
 void Actor::update(float deltaTime)
 {
+    for (int i = 0; i < m_componentCount; i++)
+    {
+        if (!m_component[i]->getStarted())
+            m_component[i]->start();
+
+        m_component[i]->update(deltaTime);
+    }
 }
 
 void Actor::draw()
 {
+    for (int i = 0; i < m_componentCount; i++)
+        m_component[i]->draw();
 }
 
 void Actor::end()
 {
+    for (int i = 0; i < m_componentCount; i++)
+        m_component[i]->end();
     m_started = false;
 }
 
 void Actor::onCollision(Actor* other)
 {
+    for (int i = 0; i < m_componentCount; i++)
+        m_component[i]->onCollision(other);
 }
 
 Component* Actor::addComponent(Component* component)
 {
+    //Return null if this component has an owner
+    if (component->getOwner())
+        return nullptr;
+
     //Create a new array with a size one greater than our old array
     Component** appendedArray = new Component * [m_componentCount + 1];
     //Copy the values from the old array to the new array
@@ -68,11 +86,9 @@ bool Actor::remomveComponent(Component* component)
 {
     //Check to see if the index is outside the bounds of our array
     if (!component)
-    {
         return false;
-    }
 
-    bool actorRemoved = false;
+    bool componentRemoved = false;
 
     //Create a new array with a size one less than our old array 
     Component** newArray = new Component * [m_componentCount - 1];
@@ -89,27 +105,33 @@ bool Actor::remomveComponent(Component* component)
             j++;
         }
         else
-        {
-            delete m_component[i];
-            actorRemoved = true;
-        }
+            componentRemoved = true;
     }
 
     //Set the old array to be the tempArray
-    m_component = newArray;
-    m_componentCount--;
-    return actorRemoved;
+    if (componentRemoved)
+    {
+        m_component = newArray;
+        m_componentCount--;
+        delete component;
+    }
+    
+    delete[] newArray;
+
+    //Returns whether or not the removal occured
+    return componentRemoved;
 }
 
 bool Actor::remomveComponent(const char* name)
 {
     //Check to see if the index is outside the bounds of our array
-    if (!name)
+    if (name)
     {
         return false;
     }
 
-    bool actorRemoved = false;
+    bool componentRemoved = false;
+    Component* componentToDelete = nullptr;
 
     //Create a new array with a size one less than our old array 
     Component** newArray = new Component * [m_componentCount - 1];
@@ -120,29 +142,39 @@ bool Actor::remomveComponent(const char* name)
     {
         //If the current index is not the index that needs to be removed,
         //add the value into the old array and increment j
-        if (m_component[i]->getName() == name)
+        if (strcmp(m_component[i]->getName(), name) == 0)
         {
             newArray[j] = m_component[i];
             j++;
         }
         else
         {
-            delete m_component[i];
-            actorRemoved = true;
+            componentToDelete = m_component[i];
+            componentRemoved = true;
         }
     }
 
-    //Set the old array to be the tempArray
-    m_component = newArray;
-    m_componentCount--;
-    return actorRemoved;
+    if (componentRemoved)
+    {
+        delete componentToDelete;
+        //Set the old array to be the tempArray
+        m_component = newArray;
+        m_componentCount--;
+    }
+
+    delete[] newArray;
+    
+    return componentRemoved;
 }
 
 Component* Actor::getComponent(const char* name)
 {
+    //Iterate through the component array
     for (int i = 0; i < m_componentCount; i++)
-        if (m_component[i]->getName() == name)
+        //Return the component if the name is the same as the current component
+        if (strcmp(m_component[i]->getName(), name) == 0)
             return m_component[i];
+
     return nullptr;
 }
 
@@ -156,6 +188,9 @@ Component* Actor::getComponent(int value)
 
 void Actor::onDestroy()
 {
+    for (int i = 0; i < m_componentCount; i++)
+        m_component[i]->onDestroy();
+
     //Removes this actor from its parent if it has one
     if (getTransform()->getParent())
         getTransform()->getParent()->removeChild(getTransform());

@@ -3,23 +3,11 @@
 #include "Transform2D.h"
 #include "InputComponent.h"
 
-void MovementComponent::start()
-{
-}
-
 void MovementComponent::update(float deltaTime)
 {
-	getOwner()->getTransform()->setLocalPosition(getOwner()->getTransform()->getLocalPosition() + (m_velocity.normalize() * m_speed * deltaTime));
-}
+	//Add the new velocity to the old position to get the new position
+	MathLibrary::Vector2 newPosition = getOwner()->getTransform()->getLocalPosition() + getVelocity() * deltaTime;
 
-void MovementComponent::draw()
-{
-}
-
-void MovementComponent::end()
-{
-}
-
-void MovementComponent::onCollision(Actor* other)
-{
+	//Set the actors position to be the new position found
+	getOwner()->getTransform()->setLocalPosition(newPosition);
 }
