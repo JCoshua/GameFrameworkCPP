@@ -5,12 +5,12 @@
 #include <Matrix3.h>
 #include <cmath>
 
-SpriteComponent::SpriteComponent(Texture2D* texture, Actor* actor, const char* name) : Component::Component(actor, name)
+SpriteComponent::SpriteComponent(Texture2D* texture, const char* name) : Component::Component(name)
 {
 	m_texture = texture;
 }
 
-SpriteComponent::SpriteComponent(const char* path, Actor* actor, const char* name) : Component::Component(actor, name)
+SpriteComponent::SpriteComponent(const char* path, const char* name) : Component::Component(name)
 {
 	m_texture = new Texture2D(RAYLIB_H::LoadTexture(path));
 }
@@ -38,7 +38,7 @@ void SpriteComponent::draw()
 
 	//Changes the position of the sprite to the center of the transform
 	position = position - (forward * getWidth() / 2);
-	position = position - (up * getHeight() / 2);
+	position = position - (up.normalize() * getHeight() / 2);
 
 	//Change the position vector to be a raylib vector
 	RAYLIB_H::Vector2 rayPos = { position.x, position.y };

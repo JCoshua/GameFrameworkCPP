@@ -6,8 +6,8 @@ class MovementComponent :
 	public Component
 {
 public:
-	MovementComponent(Actor* actor, const char* name = "MoveComponent") : Component::Component(actor, name) {};
-	~MovementComponent() { delete this; }
+	MovementComponent(const char* name = "MoveComponent") : Component::Component(name) {};
+	~MovementComponent() {}
 
 	/// <summary>
 	/// Gets the maximum magnitude fo this actors velocity vector

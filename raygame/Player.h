@@ -1,23 +1,21 @@
 #pragma once
 #include "Actor.h"
-#include "MovementComponent.h"
-#include "InputComponent.h"
-#include "raylib.h"
+class InputComponent;
+class MovementComponent;
+class SpriteComponent;
+
 class Player :
 	public Actor
 {
 public:
-	Player() {};
-	Player(MovementComponent moveComponent, InputComponent input);
+	Player(float x, float y, char const* name = "Player") : Actor(x, y, name) {};
 	~Player();
 	void start() override;
 	void update(float deltaTime) override;
-	void draw() override;
-	void end() override;
-	void setVelocity(MathLibrary::Vector2 velocity) { m_moveComponent->setVelocity(velocity); };
 
 private:
-	InputComponent* m_input;
+	InputComponent* m_inputComponent;
 	MovementComponent* m_moveComponent;
+	SpriteComponent* m_spriteComponent;
 };
 

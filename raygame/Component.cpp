@@ -8,16 +8,15 @@ Component::Component()
 	m_started = false;
 }
 
-Component::Component(Actor* actor, const char* name)
+Component::Component(const char* name)
 {
-	assignOwner(actor);
 	m_name = name;
 	m_started = false;
 }
 
 Component::~Component()
 {
-	delete this;
+
 }
 
 void Component::assignOwner(Actor* owner)

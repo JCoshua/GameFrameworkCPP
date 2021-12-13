@@ -23,8 +23,10 @@ void InputComponent::end()
 
 MathLibrary::Vector2 InputComponent::getMoveAxis()
 {
-	int xDirection = -(Engine::getKeyDown(KeyboardKey::KEY_W)) + (Engine::getKeyDown(KeyboardKey::KEY_S));
-	int yDirection = -(Engine::getKeyDown(KeyboardKey::KEY_A)) + (Engine::getKeyDown(KeyboardKey::KEY_D));
+	//Gets the direction for the indiviual axis
+	int xDirection = -RAYLIB_H::IsKeyDown(RAYLIB_H::KEY_A) + RAYLIB_H::IsKeyDown(RAYLIB_H::KEY_D);
+	int yDirection = -RAYLIB_H::IsKeyDown(RAYLIB_H::KEY_W) + RAYLIB_H::IsKeyDown(RAYLIB_H::KEY_S);
 
+	//Returns a new vector represneting the move direction
 	return MathLibrary::Vector2(xDirection, yDirection);
 }

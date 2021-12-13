@@ -75,6 +75,13 @@ Component* Actor::addComponent(Component* component)
 
     //Set the last value in the new array to be the actor we want to add
     appendedArray[m_componentCount] = component;
+    component->assignOwner(this);
+
+    if (m_componentCount > 1)
+        delete[] m_component;
+    else if (m_componentCount == 1)
+        delete m_component;
+
     //Set old array to hold the values of the new array
     m_component = appendedArray;
     m_componentCount++;
@@ -111,12 +118,13 @@ bool Actor::remomveComponent(Component* component)
     //Set the old array to be the tempArray
     if (componentRemoved)
     {
+        delete[] m_component;
         m_component = newArray;
         m_componentCount--;
         delete component;
     }
-    
-    delete[] newArray;
+    else
+        delete[] newArray;
 
     //Returns whether or not the removal occured
     return componentRemoved;
@@ -156,13 +164,13 @@ bool Actor::remomveComponent(const char* name)
 
     if (componentRemoved)
     {
-        delete componentToDelete;
-        //Set the old array to be the tempArray
+        delete[] m_component;
         m_component = newArray;
         m_componentCount--;
+        delete componentToDelete;
     }
-
-    delete[] newArray;
+    else
+        delete[] newArray;
     
     return componentRemoved;
 }
